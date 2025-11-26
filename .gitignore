@@ -1,0 +1,74 @@
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Logs
+logs/
+*.log
+log.txt
+
+# Sequelize generated files
+*.sqlite
+*.sqlite3
+database.sqlite
+database.sqlite3
+*.db
+*.db-journal
+
+# If using MySQL or Postgres, ignore dumps
+*.sql
+*.dump
+
+# --------------------------------------------------
+# Chrome Extension
+# --------------------------------------------------
+
+# Chrome temporary files
+*.crx
+*.pem
+
+# Production build (if you create one)
+dist/
+build/
+
+# Storage cache
+chrome-extension-cache/
+chrome_data/
+
+# --------------------------------------------------
+# OS Files
+# --------------------------------------------------
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# --------------------------------------------------
+# IDE / Editor Files
+# --------------------------------------------------
+
+# VS Code
+.vscode/
+.history/
+
+# JetBrains IDEs
+.idea/
+*.iml
+out/
