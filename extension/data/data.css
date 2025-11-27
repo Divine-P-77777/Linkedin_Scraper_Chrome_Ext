@@ -1,0 +1,128 @@
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background: #f3f5f7;
+  padding: 30px;
+  margin: 0;
+  color: #2b2d42;
+}
+
+h2 {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 25px;
+  color: #1b1d28;
+  font-weight: 700;
+}
+
+
+table {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 12px;
+  border-collapse: collapse;
+  box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+
+table thead {
+  background: linear-gradient(90deg, #0066ff, #4da6ff);
+  color: #fff;
+}
+
+table th {
+  padding: 14px 12px;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  text-align: left;
+  font-weight: 600;
+}
+
+
+table td {
+  padding: 12px 14px;
+  font-size: 14px;
+  border-bottom: 1px solid #ececf1;
+  line-height: 1.4;
+}
+
+table tbody tr:hover {
+  background: #f0f6ff;
+  cursor: pointer;
+}
+
+
+a.profile-link {
+  color: #0066ff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+a.profile-link:hover {
+  text-decoration: underline;
+}
+
+
+.bio-text,
+.about-text {
+  max-height: 120px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.bio-text::-webkit-scrollbar,
+.about-text::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bio-text::-webkit-scrollbar-thumb,
+.about-text::-webkit-scrollbar-thumb {
+  background: #c0c6d1;
+  border-radius: 4px;
+}
+
+
+@media (max-width: 900px) {
+  table th, table td {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+}
+
+
+.about-box {
+  max-width: 300px;
+  line-height: 1.4;
+  position: relative;
+}
+
+.about-short {
+  display: inline;
+}
+
+.about-full.hidden {
+  display: none;
+}
+
+.about-full {
+  display: inline;
+}
+
+.toggle-btn {
+  margin-left: 8px;
+  background: none;
+  border: none;
+  color: #0066ff;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.toggle-btn:hover {
+  text-decoration: underline;
+}
