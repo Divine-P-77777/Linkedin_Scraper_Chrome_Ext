@@ -1,17 +1,24 @@
 {
   "manifest_version": 3,
-  "name": "LinkedIn Auto Scraper",
-  "version": "1.0",
-  "permissions": ["tabs", "scripting", "activeTab","storage"],
+  "name": "LinkedIn Auto Scraper & Engagement",
+  "version": "2.0",
+  "permissions": [
+    "tabs",
+    "scripting",
+    "activeTab",
+    "storage"
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "icons": {
-    
     "48": "icons/image.png"
   },
   "action": {
     "default_popup": "popup.html"
   },
-  "host_permissions": ["https://www.linkedin.com/*"]
+  "host_permissions": [
+    "https://www.linkedin.com/*"
+  ],
+  "content_scripts": []
 }

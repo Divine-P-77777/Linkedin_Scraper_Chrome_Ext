@@ -1,42 +1,64 @@
 const textarea = document.getElementById("links");
+const likeInput = document.getElementById("likeCount");
+const commentInput = document.getElementById("commentCount");
+const startEngageBtn = document.getElementById("startBtn");
 
-// Load saved textarea content
+
+// Load saved links
 chrome.storage.local.get("savedLinks", (data) => {
   if (data.savedLinks) textarea.value = data.savedLinks;
 });
 
-// Save textarea text live
+// Save textarea live
 textarea.addEventListener("input", () => {
   chrome.storage.local.set({ savedLinks: textarea.value });
 });
 
-// START SCRAPING
-document.getElementById("startBtn").onclick = () => {
-  const rawLinks = textarea.value
-    .trim()
-    .split("\n")
-    .filter(l => l.trim() !== "");
+
+// ================= SCRAPING =================
+document.getElementById("scrapeBtn").onclick = () => {
+  const rawLinks = textarea.value.trim().split("\n").filter(l => l.trim() !== "");
 
   if (rawLinks.length < 3) {
     alert("Paste at least 3 LinkedIn profile links.");
     return;
   }
 
+  chrome.runtime.sendMessage({ action: "startScraping", links: rawLinks });
 
-  // Send links to background script
-  chrome.runtime.sendMessage({ action: "start", links: rawLinks });
-
-  // Clear textarea after submission
   textarea.value = "";
   chrome.storage.local.set({ savedLinks: "" });
 
-  // Optional success message
-  alert("Scraping started. Please keep LinkedIn logged in.");
+  alert("Scraping started. Keep LinkedIn logged in!");
 };
 
-// OPEN DATA PAGE
-document.getElementById("seeDataBtn").onclick = () => {
-  chrome.tabs.create({
-    url: chrome.runtime.getURL("data/data.html")
+
+// ================= ENABLE ENGAGE BUTTON =================
+function validateEngage() {
+  if (likeInput.value > 0 && commentInput.value > 0) {
+    startEngageBtn.disabled = false;
+  } else {
+    startEngageBtn.disabled = true;
+  }
+}
+
+likeInput.addEventListener("input", validateEngage);
+commentInput.addEventListener("input", validateEngage);
+
+
+// ================= AUTO ENGAGEMENT =================
+startEngageBtn.onclick = () => {
+  chrome.runtime.sendMessage({
+    action: "startAutoEngage",
+    likeCount: parseInt(likeInput.value),
+    commentCount: parseInt(commentInput.value)
   });
+
+  alert("Auto Engagement Started! Opening LinkedIn Feed...");
+};
+
+
+// ================= VIEW STORED DATA =================
+document.getElementById("seeDataBtn").onclick = () => {
+  chrome.tabs.create({ url: chrome.runtime.getURL("data/data.html") });
 };
