@@ -1,8 +1,7 @@
 let likesDone = 0;
 let maxLikes = 0;
 
-// Receive count from background
-chrome.runtime.onMessage.addListener((msg) => {
+chrome.runtime.onMessage.addListener((msg) => {  // using this chrome runtime listener to receive data from background.js
   if (msg.action === "startLikes") {
     maxLikes = msg.likeCount || 0;
     if (maxLikes > 0) startAutoLike();
@@ -44,7 +43,7 @@ async function startAutoLike() {
     await sleep(randomDelay(1800, 2600));
   }
 
-  console.log("✔ Auto-like completed.");
+  console.log("Auto-like completed.");
 }
 
 // Helpers

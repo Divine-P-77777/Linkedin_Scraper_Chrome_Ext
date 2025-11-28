@@ -1,4 +1,5 @@
 const textarea = document.getElementById("links");
+
 const likeInput = document.getElementById("likeCount");
 const commentInput = document.getElementById("commentCount");
 const startEngageBtn = document.getElementById("startBtn");
@@ -15,7 +16,8 @@ textarea.addEventListener("input", () => {
 });
 
 
-// ================= SCRAPING =================
+// Scraping Section
+
 document.getElementById("scrapeBtn").onclick = () => {
   const rawLinks = textarea.value.trim().split("\n").filter(l => l.trim() !== "");
 
@@ -33,7 +35,7 @@ document.getElementById("scrapeBtn").onclick = () => {
 };
 
 
-// ================= ENABLE ENGAGE BUTTON =================
+// Auto Engagement Section
 function validateEngage() {
   if (likeInput.value > 0 && commentInput.value > 0) {
     startEngageBtn.disabled = false;
@@ -46,9 +48,8 @@ likeInput.addEventListener("input", validateEngage);
 commentInput.addEventListener("input", validateEngage);
 
 
-// ================= AUTO ENGAGEMENT =================
 startEngageBtn.onclick = () => {
-  chrome.runtime.sendMessage({
+  chrome.runtime.sendMessage({  // send automation data to background.js
     action: "startAutoEngage",
     likeCount: parseInt(likeInput.value),
     commentCount: parseInt(commentInput.value),
@@ -59,7 +60,6 @@ startEngageBtn.onclick = () => {
 };
 
 
-// ================= VIEW STORED DATA =================
 document.getElementById("seeDataBtn").onclick = () => {
   chrome.tabs.create({ url: chrome.runtime.getURL("data/data.html") });
 };

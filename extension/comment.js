@@ -1,4 +1,3 @@
-// comment.js (optimized & stable)
 let commentsDone = 0;
 let maxComments = 0;
 
@@ -9,7 +8,7 @@ chrome.runtime.onMessage.addListener((msg) => {
     if (msg.action === "startComments") {
         console.log("DEBUG RECEIVED commentText:", msg.commentText);
 
-        commentsDone = 0;                     // reset for each new run
+        commentsDone = 0;                    
         maxComments = msg.commentCount || 0;
 
         if (msg.commentText && msg.commentText.trim() !== "") {
@@ -24,17 +23,14 @@ chrome.runtime.onMessage.addListener((msg) => {
 });
 
 
-// ======================== MAIN LOGIC ============================
 async function startAutoComments() {
     console.log(" Auto-comment started...");
 
     while (commentsDone < maxComments) {
 
-        // Load more posts
         window.scrollBy(0, 900);
         await sleep(randomDelay(900, 1300));
 
-        // Find comment buttons
         const commentBtns = [...document.querySelectorAll('button[aria-label="Comment"]')];
 
         let targetBtn = null;
@@ -43,7 +39,6 @@ async function startAutoComments() {
         for (const btn of commentBtns) {
             const post = btn.closest("div.feed-shared-update-v2, div.feed-shared-update");
 
-            // Skip posts that already got comments
             if (post && !post.dataset.commented) {
                 targetBtn = btn;
                 targetPost = post;
@@ -76,7 +71,6 @@ async function startAutoComments() {
         typeText(inputBox, userCommentText);
         await sleep(650);
 
-        // Find submit
         const postBtn = targetPost.querySelector(
             "button.comments-comment-box__submit-button--cr, button.comments-comment-box__submit-button"
         );
@@ -98,7 +92,6 @@ async function startAutoComments() {
 }
 
 
-// ======================== HELPERS ==============================
 function sleep(ms) {
     return new Promise(res => setTimeout(res, ms));
 }
@@ -107,12 +100,10 @@ function randomDelay(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// React-compatible text injection
 function typeText(el, text) {
     el.focus();
-    el.textContent = text;  // safer than innerHTML
+    el.textContent = text;  
 
-    // Fire LinkedIn's React events
     el.dispatchEvent(new InputEvent("input", {
         bubbles: true,
         inputType: "insertText",

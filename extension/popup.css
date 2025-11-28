@@ -1,13 +1,20 @@
 body {
-  margin: 0;
+  margin: 10px;
   font-family: 'Segoe UI', sans-serif;
   background: #f0f2f4; /* Softer clean background */
 }
 
+textarea,
+input[type="number"],
+input[type="text"] {
+  margin-top: 14px;
+}
+
+
 .container {
-  width: 320px;
+  width: 400px;
   padding: 16px;
-  margin: auto;
+  margin: 4px;
 }
 
 h2 {
@@ -46,9 +53,9 @@ textarea:focus {
 }
 
 button {
-  width: 100%;
+  width: fit-content;
   padding: 11px;
-  margin-top: 12px;
+  margin: 12px auto 0 auto;
   background: #0057b7;
   color: white;
   border: none;
@@ -56,8 +63,10 @@ button {
   font-size: 15px;
   cursor: pointer;
   font-weight: 600;
+  display: block;             /* important */
   transition: background 0.2s ease, transform 0.1s ease;
 }
+
 
 button:hover {
   background: #004a97;
@@ -105,9 +114,10 @@ button:active {
 }
 
 .secondary-btn {
-  width: 100%;
+  width: fit-content;
+  margin: 12px auto 0 auto;
+display: block;
   padding: 11px;
-  margin-top: 12px;
   background: #6c757d;
   color: white;
   border: none;
