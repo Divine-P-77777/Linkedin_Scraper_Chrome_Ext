@@ -51,7 +51,8 @@ startEngageBtn.onclick = () => {
   chrome.runtime.sendMessage({
     action: "startAutoEngage",
     likeCount: parseInt(likeInput.value),
-    commentCount: parseInt(commentInput.value)
+    commentCount: parseInt(commentInput.value),
+    commentText: document.getElementById("commentText").value.trim()
   });
 
   alert("Auto Engagement Started! Opening LinkedIn Feed...");

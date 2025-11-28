@@ -4,8 +4,9 @@ chrome.runtime.onMessage.addListener((msg) => {
   }
 
   if (msg.action === "startAutoEngage") {
-    startAutoEngage(msg.likeCount, msg.commentCount);
-  }
+  startAutoEngage(msg.likeCount, msg.commentCount, msg.commentText);
+}
+
 });
 
 async function openLinksSequentially(links) {
@@ -28,7 +29,7 @@ async function openLinksSequentially(links) {
 }
 
 // ========== AUTO ENGAGEMENT LOGIC ==========
-async function startAutoEngage(likeCount, commentCount) {
+async function startAutoEngage(likeCount, commentCount, commentText) {
   let tab = await chrome.tabs.create({
     url: "https://www.linkedin.com/feed/",
     active: true
@@ -59,7 +60,8 @@ async function startAutoEngage(likeCount, commentCount) {
   await wait(500); // IMPORTANT FIX
   await chrome.tabs.sendMessage(tab.id, {
     action: "startComments",
-    commentCount
+    commentCount,
+    commentText
   });
 }
 

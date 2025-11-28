@@ -1,91 +1,121 @@
+// comment.js (optimized & stable)
 let commentsDone = 0;
 let maxComments = 0;
 
+// Persist comment text across re-injections
+let userCommentText = window.__AUTO_COMMENT_TEXT__ || "👍";
+
 chrome.runtime.onMessage.addListener((msg) => {
-  if (msg.action === "startComments") {
-    maxComments = msg.commentCount || 0;
-    if (maxComments > 0) startAutoComments();
-  }
+    if (msg.action === "startComments") {
+        console.log("DEBUG RECEIVED commentText:", msg.commentText);
+
+        commentsDone = 0;                     // reset for each new run
+        maxComments = msg.commentCount || 0;
+
+        if (msg.commentText && msg.commentText.trim() !== "") {
+            window.__AUTO_COMMENT_TEXT__ = msg.commentText.trim(); 
+            userCommentText = window.__AUTO_COMMENT_TEXT__;
+        }
+
+        console.log("DEBUG USING comment:", userCommentText);
+
+        if (maxComments > 0) startAutoComments();
+    }
 });
 
+
+// ======================== MAIN LOGIC ============================
 async function startAutoComments() {
-  console.log("💬 Auto-comment started...");
+    console.log(" Auto-comment started...");
 
-  while (commentsDone < maxComments) {
+    while (commentsDone < maxComments) {
 
-    window.scrollBy(0, 700);
-    await sleep(randomDelay(900, 1500));
+        // Load more posts
+        window.scrollBy(0, 900);
+        await sleep(randomDelay(900, 1300));
 
-    // find all comment buttons
-    let commentButtons = [...document.querySelectorAll('button[aria-label*="omment"]')];
+        // Find comment buttons
+        const commentBtns = [...document.querySelectorAll('button[aria-label="Comment"]')];
 
-    let targetBtn = null;
+        let targetBtn = null;
+        let targetPost = null;
 
-    for (let btn of commentButtons) {
-      let post = btn.closest(
-        "div.feed-shared-update-v2, div.feed-shared-update"
-      );
+        for (const btn of commentBtns) {
+            const post = btn.closest("div.feed-shared-update-v2, div.feed-shared-update");
 
-      if (post && !post.getAttribute("data-commented")) {
-        targetBtn = btn;
-        break;
-      }
+            // Skip posts that already got comments
+            if (post && !post.dataset.commented) {
+                targetBtn = btn;
+                targetPost = post;
+                break;
+            }
+        }
+
+        if (!targetBtn || !targetPost) {
+            console.log(" No available post. Scrolling...");
+            await sleep(1500);
+            continue;
+        }
+
+        // Flag post to avoid repeat
+        targetPost.dataset.commented = "true";
+
+        // Open comment box
+        targetBtn.click();
+        console.log(" Opening comment box...");
+        await sleep(1400);
+
+        // Get input box
+        const inputBox = targetPost.querySelector('div[contenteditable="true"]');
+        if (!inputBox) {
+            console.log(" Comment box missing - skipping...");
+            continue;
+        }
+
+        // Insert text (React-safe)
+        typeText(inputBox, userCommentText);
+        await sleep(650);
+
+        // Find submit
+        const postBtn = targetPost.querySelector(
+            "button.comments-comment-box__submit-button--cr, button.comments-comment-box__submit-button"
+        );
+
+        if (!postBtn) {
+            console.log(" Submit button missing - skipping...");
+            continue;
+        }
+
+        postBtn.click();
+        commentsDone++;
+
+        console.log(`✔ Commented on post ${commentsDone}/${maxComments}`);
+
+        await sleep(randomDelay(1800, 2600));
     }
 
-    if (!targetBtn) {
-      console.log("No new commentable post found, scrolling...");
-      await sleep(1500);
-      continue;
-    }
-
-    // mark post as used
-    let post = targetBtn.closest("div.feed-shared-update-v2, div.feed-shared-update");
-    post.setAttribute("data-commented", "true");
-
-    // open the comment box
-    targetBtn.click();
-    await sleep(1200);
-
-    // find input inside THIS post only
-    let input = post.querySelector('div[contenteditable="true"]');
-    if (!input) {
-      console.log("⚠️ Comment input not found, skipping...");
-      continue;
-    }
-
-    typeText(input, "CFBR");
-
-    await sleep(600);
-
-    // find post button inside THIS post
-    let postBtn = post.querySelector('button[aria-label="Post"], button[data-control-name*="post"]');
-    if (!postBtn) {
-      console.log("⚠️ Post button missing, skipping...");
-      continue;
-    }
-
-    postBtn.click();
-    commentsDone++;
-
-    console.log(`✔ Commented ${commentsDone}/${maxComments}`);
-
-    await sleep(randomDelay(2000, 3000));
-  }
-
-  console.log("🎉 Auto-comment finished.");
+    console.log(" Auto-comment finished.");
 }
 
 
-// Helpers
+// ======================== HELPERS ==============================
 function sleep(ms) {
-  return new Promise(res => setTimeout(res, ms));
+    return new Promise(res => setTimeout(res, ms));
 }
 
 function randomDelay(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// React-compatible text injection
 function typeText(el, text) {
-  el.innerText = text;
-  el.dispatchEvent(new Event("input", { bubbles: true }));
+    el.focus();
+    el.textContent = text;  // safer than innerHTML
+
+    // Fire LinkedIn's React events
+    el.dispatchEvent(new InputEvent("input", {
+        bubbles: true,
+        inputType: "insertText",
+        data: text
+    }));
 }
