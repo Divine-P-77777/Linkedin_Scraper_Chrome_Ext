@@ -83,7 +83,7 @@ async function startAutoComments() {
         postBtn.click();
         commentsDone++;
 
-        console.log(`✔ Commented on post ${commentsDone}/${maxComments}`);
+        console.log(`Commented on post ${commentsDone}/${maxComments}`);
 
         await sleep(randomDelay(1800, 2600));
     }
